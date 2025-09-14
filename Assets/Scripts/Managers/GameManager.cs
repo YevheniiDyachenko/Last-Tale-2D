@@ -22,6 +22,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject kolobokPrefab;
     [SerializeField] private Transform spawnPoint;
 
+    /// <summary>
+    /// Initializes the GameManager singleton.
+    /// </summary>
     private void Awake()
     {
         // Налаштування Singleton
@@ -35,6 +38,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Starts the game loop.
+    /// </summary>
     void Start()
     {
         StartCoroutine(GameLoop());

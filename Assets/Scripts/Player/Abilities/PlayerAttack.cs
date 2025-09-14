@@ -16,13 +16,23 @@ public class PlayerAttack : MonoBehaviour
     private PlayerControls controls;
     private bool canAttack = true;
 
+    /// <summary>
+    /// Initializes the player attack controls.
+    /// </summary>
     private void Awake()
     {
         controls = new PlayerControls();
         controls.InGame.Attack.performed += _ => TryAttack();
     }
 
+    /// <summary>
+    /// Enables the attack controls.
+    /// </summary>
     private void OnEnable() => controls.InGame.Enable();
+
+    /// <summary>
+    /// Disables the attack controls.
+    /// </summary>
     private void OnDisable() => controls.InGame.Disable();
 
     private void TryAttack()
@@ -54,6 +64,9 @@ public class PlayerAttack : MonoBehaviour
         canAttack = true;
     }
 
+    /// <summary>
+    /// Draws a gizmo to visualize the attack range.
+    /// </summary>
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;

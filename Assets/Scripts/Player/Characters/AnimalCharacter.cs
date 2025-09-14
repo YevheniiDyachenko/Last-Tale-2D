@@ -1,6 +1,9 @@
 using UnityEngine;
 
 // Scripts/Player/AnimalCharacter.cs
+/// <summary>
+/// An abstract base class for all animal characters in the game.
+/// </summary>
 public abstract class AnimalCharacter : MonoBehaviour
 {
     [Header("Base Stats")]
@@ -14,6 +17,9 @@ public abstract class AnimalCharacter : MonoBehaviour
 
     private UIManager uiManager; // Посилання на UI Manager
 
+    /// <summary>
+    /// Initializes the character's stats and UI.
+    /// </summary>
     protected virtual void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -30,16 +36,26 @@ public abstract class AnimalCharacter : MonoBehaviour
         }
     }
 
-    // --- Методи для роботи з енергією ---
+    /// <summary>
+    /// Gets the current energy of the character.
+    /// </summary>
+    /// <returns>The current energy.</returns>
     public float GetCurrentEnergy() => currentEnergy;
 
+    /// <summary>
+    /// Reduces the character's energy by a specified amount.
+    /// </summary>
+    /// <param name="amount">The amount of energy to use.</param>
     public void UseEnergy(float amount)
     {
         currentEnergy -= amount;
         uiManager?.UpdateEnergyBar(currentEnergy); // Оновлюємо UI
     }
 
-    // --- НОВІ МЕТОДИ для роботи зі здоров'ям ---
+    /// <summary>
+    /// Applies damage to the character.
+    /// </summary>
+    /// <param name="amount">The amount of damage to take.</param>
     public void TakeDamage(float amount)
     {
         currentHealth -= amount;

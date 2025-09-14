@@ -14,12 +14,18 @@ public class Trap : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
 
+    /// <summary>
+    /// Initializes the trap.
+    /// </summary>
     private void Awake()
     {
         // Отримуємо компонент один раз, щоб не шукати його постійно
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
+    /// <summary>
+    /// Called when the trap is created.
+    /// </summary>
     private void Start()
     {
         // НОВИЙ КОД: Перевіряємо, чи активне підсилення, при появі пастки
@@ -31,6 +37,10 @@ public class Trap : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Called when another collider enters the trap's trigger.
+    /// </summary>
+    /// <param name="other">The other collider.</param>
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Boss"))

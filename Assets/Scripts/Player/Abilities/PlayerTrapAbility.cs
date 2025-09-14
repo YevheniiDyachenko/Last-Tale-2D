@@ -31,6 +31,9 @@ public class PlayerTrapAbility : MonoBehaviour
     private bool isTrapBoostOnCooldown = false;
 
 
+    /// <summary>
+    /// Initializes the trap ability.
+    /// </summary>
     private void Awake()
     {
         controls = new PlayerControls();
@@ -39,6 +42,9 @@ public class PlayerTrapAbility : MonoBehaviour
         controls.InGame.TrapBoost.performed += _ => TryActivateTrapBoost();
     }
 
+    /// <summary>
+    /// Initializes the UI for the trap ability.
+    /// </summary>
     private void Start()
     {
         // Знаходимо UI Manager та ініціалізуємо текст ресурсів
@@ -46,7 +52,14 @@ public class PlayerTrapAbility : MonoBehaviour
         uiManager?.UpdateResourceText(currentResources);
     }
 
+    /// <summary>
+    /// Enables the trap ability controls.
+    /// </summary>
     private void OnEnable() => controls.InGame.Enable();
+
+    /// <summary>
+    /// Disables the trap ability controls.
+    /// </summary>
     private void OnDisable() => controls.InGame.Disable();
 
     private void TryPlaceTrap()
@@ -64,7 +77,10 @@ public class PlayerTrapAbility : MonoBehaviour
         }
     }
 
-    // НОВИЙ МЕТОД: для збору ресурсів
+    /// <summary>
+    /// Called when another collider enters the trigger.
+    /// </summary>
+    /// <param name="other">The other collider.</param>
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Resource"))
@@ -80,6 +96,9 @@ public class PlayerTrapAbility : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Attempts to activate the trap boost ability.
+    /// </summary>
     private void TryActivateTrapBoost()
     {
         if (!isTrapBoostOnCooldown && character.GetCurrentEnergy() >= trapBoostEnergyCost)

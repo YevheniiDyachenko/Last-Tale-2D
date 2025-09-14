@@ -3,6 +3,9 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Represents the Wolf character, with a charge ability.
+/// </summary>
 public class WolfCharacter : AnimalCharacter
 {
     private PlayerControls controls;
@@ -21,12 +24,17 @@ public class WolfCharacter : AnimalCharacter
     private Vector2 moveInput;
     private Vector2 lookInput;
     
-    // Ми використовуємо Awake для ініціалізації
+    /// <summary>
+    /// Initializes the Wolf character.
+    /// </summary>
     private void Awake()
     {
         controls = new PlayerControls();
     }
     
+    /// <summary>
+    /// Enables the character's controls.
+    /// </summary>
     private void OnEnable()
     {
         // prepare cached delegate and subscribe
@@ -35,6 +43,9 @@ public class WolfCharacter : AnimalCharacter
         controls.InGame.Enable();
     }
 
+    /// <summary>
+    /// Disables the character's controls.
+    /// </summary>
     private void OnDisable()
     {
         // unsubscribe to avoid duplicate callbacks
@@ -43,6 +54,9 @@ public class WolfCharacter : AnimalCharacter
         controls.InGame.Disable();
     }
 
+    /// <summary>
+    /// Called every frame. Handles player input and rotation.
+    /// </summary>
     private void Update()
     {
         // Не дозволяємо зчитувати рух, поки персонаж робить ривок
@@ -58,6 +72,9 @@ public class WolfCharacter : AnimalCharacter
         HandleRotation();
     }
 
+    /// <summary>
+    /// Called every fixed frame-rate frame. Handles character movement.
+    /// </summary>
     private void FixedUpdate()
     {
         // Якщо ми не в ривку, рухаємось як зазвичай
@@ -105,7 +122,10 @@ public class WolfCharacter : AnimalCharacter
         Debug.Log("Charge is ready again.");
     }
     
-    // Обробка зіткнення під час ривка
+    /// <summary>
+    /// Called when a collision occurs during a charge.
+    /// </summary>
+    /// <param name="collision">The collision data.</param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (!isCharging) return;

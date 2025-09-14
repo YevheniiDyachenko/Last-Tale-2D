@@ -44,6 +44,9 @@ public class KolobokController : MonoBehaviour
     [Header("Attack Stats")]
     [SerializeField] private int touchDamage = 20; // Шкода від простого дотику
 
+    /// <summary>
+    /// Initializes the Kolobok boss.
+    /// </summary>
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -65,6 +68,9 @@ public class KolobokController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Called every fixed frame-rate frame. Handles the boss's movement and behavior.
+    /// </summary>
     void FixedUpdate()
     {
         if (target == null || currentState == BossState.Defeated)
@@ -216,7 +222,10 @@ public class KolobokController : MonoBehaviour
         Destroy(gameObject, 2f); // Знищуємо об'єкт через 2 секунди
     }
 
-    // НОВИЙ МЕТОД: Обробка зіткнення з гравцем
+    /// <summary>
+    /// Called when a collision occurs.
+    /// </summary>
+    /// <param name="collision">The collision data.</param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // Перевіряємо, чи це гравець

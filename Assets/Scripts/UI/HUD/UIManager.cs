@@ -4,6 +4,9 @@ using TMPro;
 using System.Collections;
 using UnityEngine.SceneManagement; // Додаємо для роботи зі сценами
 
+/// <summary>
+/// Manages the user interface, including player stats, boss UI, and game over screen.
+/// </summary>
 public class UIManager : MonoBehaviour
 {
     [Header("Player Stats")]
@@ -26,12 +29,20 @@ public class UIManager : MonoBehaviour
 
     // --- Методи для ініціалізації ---
 
+    /// <summary>
+    /// Initializes the health bar with the maximum health value.
+    /// </summary>
+    /// <param name="maxHealth">The maximum health of the player.</param>
     public void InitHealthBar(float maxHealth)
     {
         healthBar.maxValue = maxHealth;
         healthBar.value = maxHealth;
     }
 
+    /// <summary>
+    /// Initializes the energy bar with the maximum energy value.
+    /// </summary>
+    /// <param name="maxEnergy">The maximum energy of the player.</param>
     public void InitEnergyBar(float maxEnergy)
     {
         energyBar.maxValue = maxEnergy;
@@ -40,16 +51,28 @@ public class UIManager : MonoBehaviour
 
     // --- Методи для оновлення ---
 
+    /// <summary>
+    /// Updates the health bar with the current health value.
+    /// </summary>
+    /// <param name="currentHealth">The current health of the player.</param>
     public void UpdateHealthBar(float currentHealth)
     {
         healthBar.value = currentHealth;
     }
 
+    /// <summary>
+    /// Updates the energy bar with the current energy value.
+    /// </summary>
+    /// <param name="currentEnergy">The current energy of the player.</param>
     public void UpdateEnergyBar(float currentEnergy)
     {
         energyBar.value = currentEnergy;
     }
 
+    /// <summary>
+    /// Updates the resource text with the current number of resources.
+    /// </summary>
+    /// <param name="currentResources">The current number of resources.</param>
     public void UpdateResourceText(int currentResources)
     {
         resourceText.text = $"Ресурси: {currentResources}";
@@ -57,6 +80,10 @@ public class UIManager : MonoBehaviour
 
     // --- НОВІ МЕТОДИ для Боса ---
 
+    /// <summary>
+    /// Shows the boss UI and initializes the boss health bar.
+    /// </summary>
+    /// <param name="maxHealth">The maximum health of the boss.</param>
     public void ShowBossUI(float maxHealth)
     {
         bossUIPanel.SetActive(true);
@@ -64,16 +91,28 @@ public class UIManager : MonoBehaviour
         bossHealthBar.value = maxHealth;
     }
 
+    /// <summary>
+    /// Hides the boss UI.
+    /// </summary>
     public void HideBossUI()
     {
         bossUIPanel.SetActive(false);
     }
 
+    /// <summary>
+    /// Updates the boss health bar with the current health value.
+    /// </summary>
+    /// <param name="currentHealth">The current health of the boss.</param>
     public void UpdateBossHealthBar(float currentHealth)
     {
         bossHealthBar.value = currentHealth;
     }
 
+    /// <summary>
+    /// Shows an announcement message for a specified duration.
+    /// </summary>
+    /// <param name="message">The message to display.</param>
+    /// <param name="duration">The duration to display the message.</param>
     public void ShowAnnouncement(string message, float duration)
     {
         StartCoroutine(AnnouncementRoutine(message, duration));
@@ -92,6 +131,9 @@ public class UIManager : MonoBehaviour
     // --- Методи для екрана смерті ---
     private Coroutine currentDeathScreenAnimation;
 
+    /// <summary>
+    /// Shows the death screen with a fade-in animation.
+    /// </summary>
     public void ShowDeathScreen()
     {
         // Зупиняємо попередню анімацію, якщо вона є
@@ -109,6 +151,9 @@ public class UIManager : MonoBehaviour
         currentDeathScreenAnimation = StartCoroutine(AnimateDeathScreen(1f));
     }
 
+    /// <summary>
+    /// Hides the death screen with a fade-out animation.
+    /// </summary>
     public void HideDeathScreen()
     {
         // Зупиняємо попередню анімацію, якщо вона є
@@ -148,6 +193,9 @@ public class UIManager : MonoBehaviour
     }
 
     // --- Методи роботи з кнопками ---
+    /// <summary>
+    /// Initializes the UI manager.
+    /// </summary>
     private void Start()
     {
         // Переконуємося, що екран смерті спочатку схований
@@ -175,6 +223,9 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene("MainMenu"); // Переконайтеся, що сцена MainMenu існує і додана в Build Settings
     }
 
+    /// <summary>
+    /// Cleans up the button listeners when the object is destroyed.
+    /// </summary>
     private void OnDestroy()
     {
         // Видаляємо слухачів подій при знищенні об'єкта

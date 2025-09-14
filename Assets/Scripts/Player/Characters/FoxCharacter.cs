@@ -1,8 +1,10 @@
-
 using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Represents the Fox character, with a stealth ability.
+/// </summary>
 public class FoxCharacter : AnimalCharacter
 {
     private PlayerControls controls;
@@ -17,6 +19,9 @@ public class FoxCharacter : AnimalCharacter
     private Vector2 moveInput;
     private Vector2 lookInput;
 
+    /// <summary>
+    /// Initializes the Fox character.
+    /// </summary>
     private void Awake()
     {
         controls = new PlayerControls();
@@ -24,21 +29,33 @@ public class FoxCharacter : AnimalCharacter
         controls.InGame.Ability.performed += _ => TryActivateStealth();
     }
 
+    /// <summary>
+    /// Enables the character's controls.
+    /// </summary>
     private void OnEnable()
     {
         controls.InGame.Enable();
     }
 
+    /// <summary>
+    /// Disables the character's controls.
+    /// </summary>
     private void OnDisable()
     {
         controls.InGame.Disable();
     }
 
+    /// <summary>
+    /// Initializes the base character stats.
+    /// </summary>
     protected override void Start()
     {
         base.Start();
     }
 
+    /// <summary>
+    /// Called every frame. Handles player input and rotation.
+    /// </summary>
     private void Update()
     {
         moveInput = controls.InGame.Move.ReadValue<Vector2>();
@@ -46,6 +63,9 @@ public class FoxCharacter : AnimalCharacter
         HandleRotation();
     }
 
+    /// <summary>
+    /// Called every fixed frame-rate frame. Handles character movement.
+    /// </summary>
     private void FixedUpdate()
     {
         rb.linearVelocity = moveInput.normalized * moveSpeed;
