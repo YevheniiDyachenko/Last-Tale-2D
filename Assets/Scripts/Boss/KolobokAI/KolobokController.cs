@@ -2,36 +2,75 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Керує поведінкою та станом боса Колобка.
+/// </summary>
 public class KolobokController : MonoBehaviour
 {
-    // Enum для керування станами боса
-    // 1. Додаємо новий стан в enum
-    public enum BossState { Stage1_Rolling, Stage2_Jumping, StuckInTrap, Defeated }
+    /// <summary>
+    /// Визначає можливі стани боса Колобка.
+    /// </summary>
+    public enum BossState {
+        /// <summary>Бос знаходиться у стадії кочення.</summary>
+        Stage1_Rolling,
+        /// <summary>Бос знаходиться у стадії стрибків.</summary>
+        Stage2_Jumping,
+        /// <summary>Бос застряг у пастці.</summary>
+        StuckInTrap,
+        /// <summary>Бос переможений.</summary>
+        Defeated
+    }
+
+    /// <summary>
+    /// Поточний стан боса.
+    /// </summary>
     public BossState currentState;
-    private BossState previousState; // Зберігаємо попередній стан, щоб повернутись до нього
+    private BossState previousState;
 
     [Header("Base Stats")]
+    /// <summary>
+    /// Максимальне здоров'я боса.
+    /// </summary>
     [SerializeField] private int maxHealth = 1000;
+    /// <summary>
+    /// Швидкість руху боса.
+    /// </summary>
     [SerializeField] private float moveSpeed = 3f;
 
     [Header("Stage Settings")]
-    [SerializeField] private float stage2HealthThreshold = 0.7f; // Перехід на 2 стадію при 70% здоров'я
-    [SerializeField] private float jumpAttackCooldown = 5f; // Перезарядка стрибка
-    [SerializeField] private float trapStunDuration = 2f; // НОВИЙ ПАРАМЕТР: тривалість застрягання
+    /// <summary>
+    /// Поріг здоров'я для переходу на другу стадію (у відсотках).
+    /// </summary>
+    [SerializeField] private float stage2HealthThreshold = 0.7f;
+    /// <summary>
+    /// Перезарядка атаки стрибком.
+    /// </summary>
+    [SerializeField] private float jumpAttackCooldown = 5f;
+    /// <summary>
+    /// Тривалість оглушення від пастки.
+    /// </summary>
+    [SerializeField] private float trapStunDuration = 2f;
 
     private int currentHealth;
     private Transform target;
     private Rigidbody2D rb;
     private bool canAttack = true;
-    private UIManager uiManager; // Посилання на UI Manager
-    [Header("Attack Stats")]
-    [SerializeField] private int touchDamage = 20; // Шкода від простого дотику
+    private UIManager uiManager;
 
+    [Header("Attack Stats")]
+    /// <summary>
+    /// Шкода, яку бос завдає при дотику.
+    /// </summary>
+    [SerializeField] private int touchDamage = 20;
+
+    /// <summary>
+    /// Ініціалізує боса Колобка.
+    /// </summary>
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         currentHealth = maxHealth;
-        currentState = BossState.Stage1_Rolling; // Починаємо з першої стадії
+        currentState = BossState.Stage1_Rolling;
 
         GameObject player = GameObject.FindWithTag("Player");
         if (player != null)
@@ -39,8 +78,7 @@ public class KolobokController : MonoBehaviour
             target = player.transform;
         }
 
-        // Знаходимо UI Manager та сповіщаємо про появу
-    uiManager = FindFirstObjectByType<UIManager>();
+        uiManager = FindFirstObjectByType<UIManager>();
         if (uiManager != null)
         {
             uiManager.ShowAnnouncement("КОЛОБОК З'ЯВИВСЯ!", 3f);
@@ -48,6 +86,9 @@ public class KolobokController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Викликається кожен фіксований кадр. Керує рухом та поведінкою боса.
+    /// </summary>
     void FixedUpdate()
     {
         if (target == null || currentState == BossState.Defeated)
@@ -56,7 +97,6 @@ public class KolobokController : MonoBehaviour
             return;
         }
 
-        // НОВА ЛОГІКА: Перевіряємо, чи бачимо ми ціль
         if (!IsTargetVisible())
         {
             rb.linearVelocity = Vector2.zero;
@@ -64,7 +104,6 @@ public class KolobokController : MonoBehaviour
             return;
         }
 
-        // Логіка поведінки залежить від поточного стану
         switch (currentState)
         {
             case BossState.Stage1_Rolling:
@@ -74,20 +113,19 @@ public class KolobokController : MonoBehaviour
                 HandleJumpingMovement();
                 break;
             case BossState.StuckInTrap:
-                // Коли застряг - нічого не робимо
                 rb.linearVelocity = Vector2.zero;
                 break;
         }
     }
 
-    // НОВИЙ МЕТОД для перевірки видимості
     private bool IsTargetVisible()
     {
-        // Перевіряємо, чи об'єкт цілі не знаходиться на шарі "Ignore Raycast"
         return target.gameObject.layer != LayerMask.NameToLayer("Ignore Raycast");
     }
 
-    // 3. НОВИЙ ПУБЛІЧНИЙ МЕТОД, який викликатиме пастка
+    /// <summary>
+    /// Змушує боса застрягти в пастці на певний час.
+    /// </summary>
     public void GetStuckInTrap()
     {
         StartCoroutine(StuckInTrapRoutine());
@@ -95,58 +133,53 @@ public class KolobokController : MonoBehaviour
 
     private IEnumerator StuckInTrapRoutine()
     {
-        previousState = currentState; // Зберігаємо поточний стан
+        previousState = currentState;
         currentState = BossState.StuckInTrap;
         Debug.Log("Kolobok is stuck in a trap!");
 
         yield return new WaitForSeconds(trapStunDuration);
 
-        currentState = previousState; // Повертаємось до попереднього стану
+        currentState = previousState;
         Debug.Log("Kolobok broke free!");
     }
 
-    // --- Логіка стадій ---
-
     private void HandleRollingMovement()
     {
-        // Просто котиться в напрямку гравця
-    Vector2 direction = (target.position - transform.position).normalized;
-    rb.linearVelocity = direction * moveSpeed;
+        Vector2 direction = (target.position - transform.position).normalized;
+        rb.linearVelocity = direction * moveSpeed;
     }
 
     private void HandleJumpingMovement()
     {
-        // Зупиняється, готується до стрибка, стрибає, потім знову рухається
         if (canAttack)
         {
             StartCoroutine(JumpAttackRoutine());
         }
         else
         {
-            // Можна додати рух між атаками, якщо потрібно
              Vector2 direction = (target.position - transform.position).normalized;
-             rb.linearVelocity = direction * moveSpeed * 0.8f; // Рухається трохи повільніше
+             rb.linearVelocity = direction * moveSpeed * 0.8f;
         }
     }
 
     private IEnumerator JumpAttackRoutine()
     {
-    canAttack = false;
-    rb.linearVelocity = Vector2.zero; // Зупиняємось
+        canAttack = false;
+        rb.linearVelocity = Vector2.zero;
 
         Debug.Log("Kolobok is preparing to jump!");
-        yield return new WaitForSeconds(1f); // Затримка перед стрибком
+        yield return new WaitForSeconds(1f);
 
-        // Симулюємо стрибок та удар по землі (тут можна додати анімацію та ефекти)
         Debug.Log("KOLOBOK JUMP ATTACK! (AoE Shockwave)");
-        // Тут буде код для створення зони шкоди (shockwave)
 
         yield return new WaitForSeconds(jumpAttackCooldown);
         canAttack = true;
     }
 
-    // --- Система здоров'я та стадій ---
-
+    /// <summary>
+    /// Завдає шкоди босу.
+    /// </summary>
+    /// <param name="damage">Кількість шкоди.</param>
     public void TakeDamage(int damage)
     {
         if (currentState == BossState.Defeated) return;
@@ -154,7 +187,6 @@ public class KolobokController : MonoBehaviour
         currentHealth -= damage;
         Debug.Log($"Kolobok Health: {currentHealth}");
 
-        // Оновлюємо UI при отриманні шкоди
         uiManager?.UpdateBossHealthBar(currentHealth);
 
         if (currentHealth <= 0)
@@ -169,7 +201,6 @@ public class KolobokController : MonoBehaviour
 
     private void CheckStageTransition()
     {
-        // Перехід на другу стадію
         if (currentState == BossState.Stage1_Rolling && currentHealth <= maxHealth * stage2HealthThreshold)
         {
             TransitionToStage2();
@@ -179,7 +210,7 @@ public class KolobokController : MonoBehaviour
     private void TransitionToStage2()
     {
         currentState = BossState.Stage2_Jumping;
-        moveSpeed *= 1.2f; // Трохи збільшуємо швидкість
+        moveSpeed *= 1.2f;
         Debug.Log("KOLOBOK ENTERS STAGE 2! It starts jumping!");
     }
 
@@ -187,22 +218,21 @@ public class KolobokController : MonoBehaviour
     {
         currentState = BossState.Defeated;
         Debug.Log("Kolobok is defeated!");
-        // Ховаємо UI, коли бос переможений
         uiManager?.HideBossUI();
-        // Тут буде логіка перемоги
-        Destroy(gameObject, 2f); // Знищуємо об'єкт через 2 секунди
+        Destroy(gameObject, 2f);
     }
 
-    // НОВИЙ МЕТОД: Обробка зіткнення з гравцем
+    /// <summary>
+    /// Викликається при зіткненні.
+    /// </summary>
+    /// <param name="collision">Дані про зіткнення.</param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Перевіряємо, чи це гравець
         if (collision.gameObject.CompareTag("Player"))
         {
             AnimalCharacter player = collision.gameObject.GetComponent<AnimalCharacter>();
             if (player != null)
             {
-                // Завдаємо шкоди гравцеві
                 Debug.Log("Kolobok damaged the player!");
                 player.TakeDamage(touchDamage);
             }

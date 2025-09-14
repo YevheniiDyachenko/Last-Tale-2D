@@ -3,21 +3,43 @@ using System.Collections;
 using UnityEngine.InputSystem;
 
 
+/// <summary>
+/// Обробляє здатність гравця ставити пастки та використовувати їх посилення.
+/// </summary>
 [RequireComponent(typeof(AnimalCharacter))]
 public class PlayerTrapAbility : MonoBehaviour
 {
     [Header("Trap Placing")]
+    /// <summary>
+    /// Префаб пастки.
+    /// </summary>
     [SerializeField] private GameObject trapPrefab;
-    [SerializeField] private int trapCost = 1; // Вартість пастки в ресурсах
+    /// <summary>
+    /// Вартість пастки в ресурсах.
+    /// </summary>
+    [SerializeField] private int trapCost = 1;
 
     [Header("Resources")]
-    private int currentResources = 0; // Поточна кількість ресурсів
-    private UIManager uiManager; // Посилання на UI Manager
+    private int currentResources = 0;
+    private UIManager uiManager;
 
     [Header("Trap Boost Ability")]
+    /// <summary>
+    /// Тривалість посилення пастки.
+    /// </summary>
     [SerializeField] private float trapBoostDuration = 10f;
+    /// <summary>
+    /// Перезарядка посилення пастки.
+    /// </summary>
     [SerializeField] private float trapBoostCooldown = 25f;
+    /// <summary>
+    /// Вартість посилення пастки в енергії.
+    /// </summary>
     [SerializeField] private float trapBoostEnergyCost = 30f;
+
+    /// <summary>
+    /// Показує, чи активне на даний момент посилення пасток.
+    /// </summary>
     public static bool isTrapBoostActive = false;
 
     private PlayerControls controls;
@@ -25,6 +47,9 @@ public class PlayerTrapAbility : MonoBehaviour
     private bool isTrapBoostOnCooldown = false;
 
 
+    /// <summary>
+    /// Ініціалізує здатність ставити пастки.
+    /// </summary>
     private void Awake()
     {
         controls = new PlayerControls();
@@ -33,14 +58,23 @@ public class PlayerTrapAbility : MonoBehaviour
         controls.InGame.TrapBoost.performed += _ => TryActivateTrapBoost();
     }
 
+    /// <summary>
+    /// Ініціалізує UI для здатності ставити пастки.
+    /// </summary>
     private void Start()
     {
-        // Знаходимо UI Manager та ініціалізуємо текст ресурсів
         uiManager = FindFirstObjectByType<UIManager>();
         uiManager?.UpdateResourceText(currentResources);
     }
 
+    /// <summary>
+    /// Вмикає керування здатністю ставити пастки.
+    /// </summary>
     private void OnEnable() => controls.InGame.Enable();
+
+    /// <summary>
+    /// Вимикає керування здатністю ставити пастки.
+    /// </summary>
     private void OnDisable() => controls.InGame.Disable();
 
     private void TryPlaceTrap()
@@ -48,7 +82,7 @@ public class PlayerTrapAbility : MonoBehaviour
         if (trapPrefab != null && currentResources >= trapCost)
         {
             currentResources -= trapCost;
-            uiManager?.UpdateResourceText(currentResources); // Оновлюємо UI
+            uiManager?.UpdateResourceText(currentResources);
             Instantiate(trapPrefab, transform.position, Quaternion.identity);
             Debug.Log($"Trap placed! Resources left: {currentResources}");
         }
@@ -58,7 +92,10 @@ public class PlayerTrapAbility : MonoBehaviour
         }
     }
 
-    // НОВИЙ МЕТОД: для збору ресурсів
+    /// <summary>
+    /// Викликається, коли інший колайдер входить у тригер.
+    /// </summary>
+    /// <param name="other">Інший колайдер.</param>
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Resource"))
@@ -67,13 +104,16 @@ public class PlayerTrapAbility : MonoBehaviour
             if (resource != null)
             {
                 currentResources += resource.amount;
-                uiManager?.UpdateResourceText(currentResources); // Оновлюємо UI
+                uiManager?.UpdateResourceText(currentResources);
                 Debug.Log($"Collected {resource.amount} resource(s)! Total: {currentResources}");
                 Destroy(other.gameObject);
             }
         }
     }
 
+    /// <summary>
+    /// Спроба активувати посилення пасток.
+    /// </summary>
     private void TryActivateTrapBoost()
     {
         if (!isTrapBoostOnCooldown && character.GetCurrentEnergy() >= trapBoostEnergyCost)

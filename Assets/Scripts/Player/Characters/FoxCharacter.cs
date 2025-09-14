@@ -1,15 +1,26 @@
-
 using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Представляє персонажа Лисицю зі здатністю невидимості.
+/// </summary>
 public class FoxCharacter : AnimalCharacter
 {
     private PlayerControls controls;
 
     [Header("Fox Abilities")]
+    /// <summary>
+    /// Тривалість невидимості.
+    /// </summary>
     [SerializeField] private float stealthDuration = 5f;
+    /// <summary>
+    /// Перезарядка невидимості.
+    /// </summary>
     [SerializeField] private float stealthCooldown = 20f;
+    /// <summary>
+    /// Вартість невидимості в енергії.
+    /// </summary>
     [SerializeField] private float stealthEnergyCost = 40f;
 
     private bool isStealthOnCooldown = false;
@@ -17,6 +28,9 @@ public class FoxCharacter : AnimalCharacter
     private Vector2 moveInput;
     private Vector2 lookInput;
 
+    /// <summary>
+    /// Ініціалізує персонажа Лисицю.
+    /// </summary>
     private void Awake()
     {
         controls = new PlayerControls();
@@ -24,21 +38,33 @@ public class FoxCharacter : AnimalCharacter
         controls.InGame.Ability.performed += _ => TryActivateStealth();
     }
 
+    /// <summary>
+    /// Вмикає керування персонажем.
+    /// </summary>
     private void OnEnable()
     {
         controls.InGame.Enable();
     }
 
+    /// <summary>
+    /// Вимикає керування персонажем.
+    /// </summary>
     private void OnDisable()
     {
         controls.InGame.Disable();
     }
 
+    /// <summary>
+    /// Ініціалізує базові характеристики персонажа.
+    /// </summary>
     protected override void Start()
     {
         base.Start();
     }
 
+    /// <summary>
+    /// Викликається щокадру. Обробляє ввід гравця та обертання.
+    /// </summary>
     private void Update()
     {
         moveInput = controls.InGame.Move.ReadValue<Vector2>();
@@ -46,6 +72,9 @@ public class FoxCharacter : AnimalCharacter
         HandleRotation();
     }
 
+    /// <summary>
+    /// Викликається кожен фіксований кадр. Обробляє рух персонажа.
+    /// </summary>
     private void FixedUpdate()
     {
         rb.linearVelocity = moveInput.normalized * moveSpeed;
@@ -66,8 +95,6 @@ public class FoxCharacter : AnimalCharacter
             StartCoroutine(ActivateStealth());
         }
     }
-
-
 
     private IEnumerator ActivateStealth()
     {

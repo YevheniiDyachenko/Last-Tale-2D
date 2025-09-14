@@ -1,6 +1,12 @@
 using UnityEngine;
 
+/// <summary>
+/// Представляє собою ресурс, який можна підібрати в грі.
+/// </summary>
 public class CollectibleResource : MonoBehaviour
 {
-    public int amount = 1; // Кількість ресурсів, яку дає цей об'єкт
+    /// <summary>
+    /// Кількість ресурсу, яку надає цей об'єкт.
+    /// </summary>
+    public int amount = 1;
 }

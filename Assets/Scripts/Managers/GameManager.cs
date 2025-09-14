@@ -1,24 +1,43 @@
 // Scripts/Managers/GameManager.cs
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement; // Для роботи зі сценами
+using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Керує основним ігровим циклом, включаючи запуск гри, появу боса та смерть гравця.
+/// </summary>
 public class GameManager : MonoBehaviour
 {
-    // --- Створення Singleton ---
+    /// <summary>
+    /// Singleton екземпляр GameManager.
+    /// </summary>
     public static GameManager Instance { get; private set; }
 
     [Header("Game Settings")]
+    /// <summary>
+    /// Час підготовки перед появою боса.
+    /// </summary>
     [SerializeField] private float preparationTime = 90f;
-    [SerializeField] private float restartDelay = 4f; // Затримка перед перезапуском
+    /// <summary>
+    /// Затримка перед перезапуском рівня.
+    /// </summary>
+    [SerializeField] private float restartDelay = 4f;
 
     [Header("Boss Settings")]
+    /// <summary>
+    /// Префаб боса Колобка.
+    /// </summary>
     [SerializeField] private GameObject kolobokPrefab;
+    /// <summary>
+    /// Точка появи боса.
+    /// </summary>
     [SerializeField] private Transform spawnPoint;
 
+    /// <summary>
+    /// Ініціалізує Singleton GameManager.
+    /// </summary>
     private void Awake()
     {
-        // Налаштування Singleton
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -29,6 +48,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Запускає ігровий цикл.
+    /// </summary>
     void Start()
     {
         StartCoroutine(GameLoop());
@@ -49,7 +71,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // --- НОВИЙ МЕТОД для перезапуску ---
+    /// <summary>
+    /// Обробляє смерть гравця, перезапускаючи рівень із затримкою.
+    /// </summary>
     public void PlayerDied()
     {
         Debug.Log("GameManager received PlayerDied signal. Restarting level...");
