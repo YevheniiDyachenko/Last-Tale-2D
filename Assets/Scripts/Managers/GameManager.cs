@@ -3,9 +3,15 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement; // Для роботи зі сценами
 
+/// <summary>
+/// Manages the main game loop, including starting the game, spawning the boss, and handling player death.
+/// </summary>
 public class GameManager : MonoBehaviour
 {
     // --- Створення Singleton ---
+    /// <summary>
+    /// The singleton instance of the GameManager.
+    /// </summary>
     public static GameManager Instance { get; private set; }
 
     [Header("Game Settings")]
@@ -49,7 +55,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // --- НОВИЙ МЕТОД для перезапуску ---
+    /// <summary>
+    /// Handles the player's death by restarting the level after a delay.
+    /// </summary>
     public void PlayerDied()
     {
         Debug.Log("GameManager received PlayerDied signal. Restarting level...");

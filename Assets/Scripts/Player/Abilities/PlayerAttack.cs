@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Handles the player's attack ability.
+/// </summary>
 public class PlayerAttack : MonoBehaviour
 {
     [Header("Attack Settings")]

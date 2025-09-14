@@ -2,11 +2,28 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Manages the behavior and state of the Kolobok boss character.
+/// </summary>
 public class KolobokController : MonoBehaviour
 {
-    // Enum для керування станами боса
-    // 1. Додаємо новий стан в enum
-    public enum BossState { Stage1_Rolling, Stage2_Jumping, StuckInTrap, Defeated }
+    /// <summary>
+    /// Defines the possible states of the Kolobok boss.
+    /// </summary>
+    public enum BossState {
+        /// <summary>The boss is in the rolling stage.</summary>
+        Stage1_Rolling,
+        /// <summary>The boss is in the jumping stage.</summary>
+        Stage2_Jumping,
+        /// <summary>The boss is stuck in a trap.</summary>
+        StuckInTrap,
+        /// <summary>The boss is defeated.</summary>
+        Defeated
+    }
+
+    /// <summary>
+    /// The current state of the boss.
+    /// </summary>
     public BossState currentState;
     private BossState previousState; // Зберігаємо попередній стан, щоб повернутись до нього
 
@@ -87,7 +104,9 @@ public class KolobokController : MonoBehaviour
         return target.gameObject.layer != LayerMask.NameToLayer("Ignore Raycast");
     }
 
-    // 3. НОВИЙ ПУБЛІЧНИЙ МЕТОД, який викликатиме пастка
+    /// <summary>
+    /// Makes the boss get stuck in a trap for a specified duration.
+    /// </summary>
     public void GetStuckInTrap()
     {
         StartCoroutine(StuckInTrapRoutine());
@@ -147,6 +166,10 @@ public class KolobokController : MonoBehaviour
 
     // --- Система здоров'я та стадій ---
 
+    /// <summary>
+    /// Applies damage to the boss.
+    /// </summary>
+    /// <param name="damage">The amount of damage to apply.</param>
     public void TakeDamage(int damage)
     {
         if (currentState == BossState.Defeated) return;

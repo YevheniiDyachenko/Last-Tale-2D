@@ -3,6 +3,9 @@ using System.Collections;
 using UnityEngine.InputSystem;
 
 
+/// <summary>
+/// Handles the player's ability to place traps and use a trap boost.
+/// </summary>
 [RequireComponent(typeof(AnimalCharacter))]
 public class PlayerTrapAbility : MonoBehaviour
 {
@@ -18,6 +21,9 @@ public class PlayerTrapAbility : MonoBehaviour
     [SerializeField] private float trapBoostDuration = 10f;
     [SerializeField] private float trapBoostCooldown = 25f;
     [SerializeField] private float trapBoostEnergyCost = 30f;
+    /// <summary>
+    /// Indicates whether the trap boost is currently active.
+    /// </summary>
     public static bool isTrapBoostActive = false;
 
     private PlayerControls controls;

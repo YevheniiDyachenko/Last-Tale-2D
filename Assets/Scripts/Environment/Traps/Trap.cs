@@ -1,6 +1,9 @@
 // Scripts/Environment/Trap.cs
 using UnityEngine;
 
+/// <summary>
+/// Represents a trap that can be placed in the game world.
+/// </summary>
 [RequireComponent(typeof(SpriteRenderer))] // Переконуємось, що на об'єкті є SpriteRenderer
 public class Trap : MonoBehaviour
 {
