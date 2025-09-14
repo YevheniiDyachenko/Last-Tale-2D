@@ -1,0 +1,4 @@
+repository "Last Tale 2D/Last Tale 2D@7972128970639@cloud"
+  path "/"
+    br "/main"
+    co "/main"
