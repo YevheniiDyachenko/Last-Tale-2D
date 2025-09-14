@@ -2,23 +2,32 @@ using UnityEngine;
 
 // Scripts/Player/AnimalCharacter.cs
 /// <summary>
-/// An abstract base class for all animal characters in the game.
+/// Абстрактний базовий клас для всіх персонажів-тварин у грі.
 /// </summary>
 public abstract class AnimalCharacter : MonoBehaviour
 {
     [Header("Base Stats")]
+    /// <summary>
+    /// Швидкість руху персонажа.
+    /// </summary>
     [SerializeField] protected float moveSpeed = 8f;
-    [SerializeField] protected float maxHealth = 100f; // Додаємо здоров'я
+    /// <summary>
+    /// Максимальне здоров'я персонажа.
+    /// </summary>
+    [SerializeField] protected float maxHealth = 100f;
+    /// <summary>
+    /// Максимальна енергія персонажа.
+    /// </summary>
     [SerializeField] protected float maxEnergy = 100f;
 
-    protected float currentHealth; // Додаємо поточне здоров'я
+    protected float currentHealth;
     protected float currentEnergy;
     protected Rigidbody2D rb;
 
-    private UIManager uiManager; // Посилання на UI Manager
+    private UIManager uiManager;
 
     /// <summary>
-    /// Initializes the character's stats and UI.
+    /// Ініціалізує характеристики персонажа та UI.
     /// </summary>
     protected virtual void Start()
     {
@@ -26,40 +35,38 @@ public abstract class AnimalCharacter : MonoBehaviour
         currentHealth = maxHealth;
         currentEnergy = maxEnergy;
 
-        // Знаходимо UI Manager на сцені
-    uiManager = FindFirstObjectByType<UIManager>();
+        uiManager = FindFirstObjectByType<UIManager>();
         if (uiManager != null)
         {
-            // Ініціалізуємо смужки при старті
             uiManager.InitHealthBar(maxHealth);
             uiManager.InitEnergyBar(maxEnergy);
         }
     }
 
     /// <summary>
-    /// Gets the current energy of the character.
+    /// Повертає поточну енергію персонажа.
     /// </summary>
-    /// <returns>The current energy.</returns>
+    /// <returns>Поточна енергія.</returns>
     public float GetCurrentEnergy() => currentEnergy;
 
     /// <summary>
-    /// Reduces the character's energy by a specified amount.
+    /// Зменшує енергію персонажа на вказану кількість.
     /// </summary>
-    /// <param name="amount">The amount of energy to use.</param>
+    /// <param name="amount">Кількість енергії, яку потрібно використати.</param>
     public void UseEnergy(float amount)
     {
         currentEnergy -= amount;
-        uiManager?.UpdateEnergyBar(currentEnergy); // Оновлюємо UI
+        uiManager?.UpdateEnergyBar(currentEnergy);
     }
 
     /// <summary>
-    /// Applies damage to the character.
+    /// Завдає шкоди персонажу.
     /// </summary>
-    /// <param name="amount">The amount of damage to take.</param>
+    /// <param name="amount">Кількість шкоди.</param>
     public void TakeDamage(float amount)
     {
         currentHealth -= amount;
-        uiManager?.UpdateHealthBar(currentHealth); // Оновлюємо UI
+        uiManager?.UpdateHealthBar(currentHealth);
         if (currentHealth <= 0)
         {
             Die();
@@ -70,24 +77,19 @@ public abstract class AnimalCharacter : MonoBehaviour
     {
         Debug.Log("Player has died!");
 
-        // Показуємо екран смерті
         uiManager?.ShowDeathScreen();
 
-        // Повідомляємо GameManager про смерть гравця
         GameManager.Instance.PlayerDied();
         
-        // Вимикаємо керування та фізику, щоб персонаж "завмер"
-        this.enabled = false; // Вимикаємо поточний скрипт (FoxCharacter або WolfCharacter)
+        this.enabled = false;
         
-        // Вимикаємо компоненти безпечно
         var attack = GetComponent<PlayerAttack>();
         if (attack != null) attack.enabled = false;
         
         var trapAbility = GetComponent<PlayerTrapAbility>();
         if (trapAbility != null) trapAbility.enabled = false;
         
-        // Вимикаємо фізику
-        rb.bodyType = RigidbodyType2D.Kinematic; // Замість застарілого isKinematic
-        rb.linearVelocity = Vector2.zero; // Замість застарілого velocity
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.linearVelocity = Vector2.zero;
     }
 }

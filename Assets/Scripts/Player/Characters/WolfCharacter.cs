@@ -4,18 +4,17 @@ using System.Collections;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Represents the Wolf character, with a charge ability.
+/// Представляє персонажа Вовка зі здатністю ривка.
 /// </summary>
 public class WolfCharacter : AnimalCharacter
 {
     private PlayerControls controls;
-    // cached callback so we can unsubscribe cleanly
     private System.Action<UnityEngine.InputSystem.InputAction.CallbackContext> chargePerformed;
 
     [Header("Wolf Abilities")]
-    [SerializeField] private float chargeSpeed = 25f; // Швидкість ривка
-    [SerializeField] private float chargeDuration = 0.3f; // Тривалість ривка
-    [SerializeField] private int chargeDamage = 40; // Шкода від ривка
+    [SerializeField] private float chargeSpeed = 25f;
+    [SerializeField] private float chargeDuration = 0.3f;
+    [SerializeField] private int chargeDamage = 40;
     [SerializeField] private float chargeCooldown = 8f;
     [SerializeField] private float chargeEnergyCost = 35f;
 
@@ -25,7 +24,7 @@ public class WolfCharacter : AnimalCharacter
     private Vector2 lookInput;
     
     /// <summary>
-    /// Initializes the Wolf character.
+    /// Ініціалізує персонажа Вовка.
     /// </summary>
     private void Awake()
     {
@@ -33,33 +32,30 @@ public class WolfCharacter : AnimalCharacter
     }
     
     /// <summary>
-    /// Enables the character's controls.
+    /// Вмикає керування персонажем.
     /// </summary>
     private void OnEnable()
     {
-        // prepare cached delegate and subscribe
         chargePerformed = ctx => TryActivateCharge();
         controls.InGame.Ability.performed += chargePerformed;
         controls.InGame.Enable();
     }
 
     /// <summary>
-    /// Disables the character's controls.
+    /// Вимикає керування персонажем.
     /// </summary>
     private void OnDisable()
     {
-        // unsubscribe to avoid duplicate callbacks
         if (chargePerformed != null)
             controls.InGame.Ability.performed -= chargePerformed;
         controls.InGame.Disable();
     }
 
     /// <summary>
-    /// Called every frame. Handles player input and rotation.
+    /// Викликається щокадру. Обробляє ввід гравця та обертання.
     /// </summary>
     private void Update()
     {
-        // Не дозволяємо зчитувати рух, поки персонаж робить ривок
         if (isCharging)
         {
             moveInput = Vector2.zero;
@@ -73,11 +69,10 @@ public class WolfCharacter : AnimalCharacter
     }
 
     /// <summary>
-    /// Called every fixed frame-rate frame. Handles character movement.
+    /// Викликається кожен фіксований кадр. Обробляє рух персонажа.
     /// </summary>
     private void FixedUpdate()
     {
-        // Якщо ми не в ривку, рухаємось як зазвичай
         if (!isCharging)
         {
             rb.linearVelocity = moveInput.normalized * moveSpeed;
@@ -106,7 +101,6 @@ public class WolfCharacter : AnimalCharacter
         isCharging = true;
         isChargeOnCooldown = true;
         
-        // Ривок у напрямку, куди дивиться персонаж (transform.right)
         Vector2 chargeDirection = transform.right;
         rb.linearVelocity = chargeDirection * chargeSpeed;
 
@@ -115,7 +109,7 @@ public class WolfCharacter : AnimalCharacter
         yield return new WaitForSeconds(chargeDuration);
 
         isCharging = false;
-        rb.linearVelocity = Vector2.zero; // Зупиняємось після ривка
+        rb.linearVelocity = Vector2.zero;
 
         yield return new WaitForSeconds(chargeCooldown);
         isChargeOnCooldown = false;
@@ -123,14 +117,13 @@ public class WolfCharacter : AnimalCharacter
     }
     
     /// <summary>
-    /// Called when a collision occurs during a charge.
+    /// Викликається при зіткненні під час ривка.
     /// </summary>
-    /// <param name="collision">The collision data.</param>
+    /// <param name="collision">Дані про зіткнення.</param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (!isCharging) return;
 
-        // Перевіряємо, чи це бос
         if (collision.gameObject.CompareTag("Boss"))
         {
             KolobokController boss = collision.gameObject.GetComponent<KolobokController>();
@@ -138,10 +131,9 @@ public class WolfCharacter : AnimalCharacter
             {
                 Debug.Log("Charge hit the Kolobok!");
                 boss.TakeDamage(chargeDamage);
-                boss.GetStuckInTrap(); // Використовуємо ту ж логіку оглушення, що й для пастки
+                boss.GetStuckInTrap();
             }
         }
-        // НОВИЙ КОД: Перевіряємо, чи не врізались ми в іншого гравця (для майбутнього кооперативу)
         else if (collision.gameObject.CompareTag("Player"))
         {
             AnimalCharacter otherPlayer = collision.gameObject.GetComponent<AnimalCharacter>();
@@ -149,11 +141,9 @@ public class WolfCharacter : AnimalCharacter
             {
                 Debug.Log("Wolf charge hit another player!");
                 otherPlayer.TakeDamage(chargeDamage);
-                // Опціонально: відштовхування або інші ефекти тут
             }
         }
 
-        // Завершуємо ривок після зіткнення з будь-яким твердим об'єктом
         isCharging = false;
         rb.linearVelocity = Vector2.zero;
     }

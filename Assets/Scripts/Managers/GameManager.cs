@@ -1,33 +1,31 @@
 // Scripts/Managers/GameManager.cs
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement; // Для роботи зі сценами
+using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Manages the main game loop, including starting the game, spawning the boss, and handling player death.
+/// Керує основним ігровим циклом, включаючи запуск гри, появу боса та смерть гравця.
 /// </summary>
 public class GameManager : MonoBehaviour
 {
-    // --- Створення Singleton ---
     /// <summary>
-    /// The singleton instance of the GameManager.
+    /// Singleton екземпляр GameManager.
     /// </summary>
     public static GameManager Instance { get; private set; }
 
     [Header("Game Settings")]
     [SerializeField] private float preparationTime = 90f;
-    [SerializeField] private float restartDelay = 4f; // Затримка перед перезапуском
+    [SerializeField] private float restartDelay = 4f;
 
     [Header("Boss Settings")]
     [SerializeField] private GameObject kolobokPrefab;
     [SerializeField] private Transform spawnPoint;
 
     /// <summary>
-    /// Initializes the GameManager singleton.
+    /// Ініціалізує Singleton GameManager.
     /// </summary>
     private void Awake()
     {
-        // Налаштування Singleton
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -39,7 +37,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Starts the game loop.
+    /// Запускає ігровий цикл.
     /// </summary>
     void Start()
     {
@@ -62,7 +60,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Handles the player's death by restarting the level after a delay.
+    /// Обробляє смерть гравця, перезапускаючи рівень із затримкою.
     /// </summary>
     public void PlayerDied()
     {

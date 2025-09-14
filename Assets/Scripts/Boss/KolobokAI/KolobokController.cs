@@ -3,26 +3,26 @@ using UnityEngine;
 using System.Collections;
 
 /// <summary>
-/// Manages the behavior and state of the Kolobok boss character.
+/// Керує поведінкою та станом боса Колобка.
 /// </summary>
 public class KolobokController : MonoBehaviour
 {
     /// <summary>
-    /// Defines the possible states of the Kolobok boss.
+    /// Визначає можливі стани боса Колобка.
     /// </summary>
     public enum BossState {
-        /// <summary>The boss is in the rolling stage.</summary>
+        /// <summary>Бос знаходиться у стадії кочення.</summary>
         Stage1_Rolling,
-        /// <summary>The boss is in the jumping stage.</summary>
+        /// <summary>Бос знаходиться у стадії стрибків.</summary>
         Stage2_Jumping,
-        /// <summary>The boss is stuck in a trap.</summary>
+        /// <summary>Бос застряг у пастці.</summary>
         StuckInTrap,
-        /// <summary>The boss is defeated.</summary>
+        /// <summary>Бос переможений.</summary>
         Defeated
     }
 
     /// <summary>
-    /// The current state of the boss.
+    /// Поточний стан боса.
     /// </summary>
     public BossState currentState;
     private BossState previousState; // Зберігаємо попередній стан, щоб повернутись до нього
@@ -41,11 +41,15 @@ public class KolobokController : MonoBehaviour
     private Rigidbody2D rb;
     private bool canAttack = true;
     private UIManager uiManager; // Посилання на UI Manager
+
     [Header("Attack Stats")]
+    /// <summary>
+    /// Шкода, яку бос завдає при дотику.
+    /// </summary>
     [SerializeField] private int touchDamage = 20; // Шкода від простого дотику
 
     /// <summary>
-    /// Initializes the Kolobok boss.
+    /// Ініціалізує боса Колобка.
     /// </summary>
     void Start()
     {
@@ -60,7 +64,7 @@ public class KolobokController : MonoBehaviour
         }
 
         // Знаходимо UI Manager та сповіщаємо про появу
-    uiManager = FindFirstObjectByType<UIManager>();
+        uiManager = FindFirstObjectByType<UIManager>();
         if (uiManager != null)
         {
             uiManager.ShowAnnouncement("КОЛОБОК З'ЯВИВСЯ!", 3f);
@@ -69,7 +73,7 @@ public class KolobokController : MonoBehaviour
     }
 
     /// <summary>
-    /// Called every fixed frame-rate frame. Handles the boss's movement and behavior.
+    /// Викликається кожен фіксований кадр. Керує рухом та поведінкою боса.
     /// </summary>
     void FixedUpdate()
     {
@@ -79,7 +83,6 @@ public class KolobokController : MonoBehaviour
             return;
         }
 
-        // НОВА ЛОГІКА: Перевіряємо, чи бачимо ми ціль
         if (!IsTargetVisible())
         {
             rb.linearVelocity = Vector2.zero;
@@ -87,7 +90,6 @@ public class KolobokController : MonoBehaviour
             return;
         }
 
-        // Логіка поведінки залежить від поточного стану
         switch (currentState)
         {
             case BossState.Stage1_Rolling:
@@ -97,21 +99,18 @@ public class KolobokController : MonoBehaviour
                 HandleJumpingMovement();
                 break;
             case BossState.StuckInTrap:
-                // Коли застряг - нічого не робимо
                 rb.linearVelocity = Vector2.zero;
                 break;
         }
     }
 
-    // НОВИЙ МЕТОД для перевірки видимості
     private bool IsTargetVisible()
     {
-        // Перевіряємо, чи об'єкт цілі не знаходиться на шарі "Ignore Raycast"
         return target.gameObject.layer != LayerMask.NameToLayer("Ignore Raycast");
     }
 
     /// <summary>
-    /// Makes the boss get stuck in a trap for a specified duration.
+    /// Змушує боса застрягти в пастці на певний час.
     /// </summary>
     public void GetStuckInTrap()
     {
@@ -120,62 +119,53 @@ public class KolobokController : MonoBehaviour
 
     private IEnumerator StuckInTrapRoutine()
     {
-        previousState = currentState; // Зберігаємо поточний стан
+        previousState = currentState;
         currentState = BossState.StuckInTrap;
         Debug.Log("Kolobok is stuck in a trap!");
 
         yield return new WaitForSeconds(trapStunDuration);
 
-        currentState = previousState; // Повертаємось до попереднього стану
+        currentState = previousState;
         Debug.Log("Kolobok broke free!");
     }
 
-    // --- Логіка стадій ---
-
     private void HandleRollingMovement()
     {
-        // Просто котиться в напрямку гравця
-    Vector2 direction = (target.position - transform.position).normalized;
-    rb.linearVelocity = direction * moveSpeed;
+        Vector2 direction = (target.position - transform.position).normalized;
+        rb.linearVelocity = direction * moveSpeed;
     }
 
     private void HandleJumpingMovement()
     {
-        // Зупиняється, готується до стрибка, стрибає, потім знову рухається
         if (canAttack)
         {
             StartCoroutine(JumpAttackRoutine());
         }
         else
         {
-            // Можна додати рух між атаками, якщо потрібно
              Vector2 direction = (target.position - transform.position).normalized;
-             rb.linearVelocity = direction * moveSpeed * 0.8f; // Рухається трохи повільніше
+             rb.linearVelocity = direction * moveSpeed * 0.8f;
         }
     }
 
     private IEnumerator JumpAttackRoutine()
     {
-    canAttack = false;
-    rb.linearVelocity = Vector2.zero; // Зупиняємось
+        canAttack = false;
+        rb.linearVelocity = Vector2.zero;
 
         Debug.Log("Kolobok is preparing to jump!");
-        yield return new WaitForSeconds(1f); // Затримка перед стрибком
+        yield return new WaitForSeconds(1f);
 
-        // Симулюємо стрибок та удар по землі (тут можна додати анімацію та ефекти)
         Debug.Log("KOLOBOK JUMP ATTACK! (AoE Shockwave)");
-        // Тут буде код для створення зони шкоди (shockwave)
 
         yield return new WaitForSeconds(jumpAttackCooldown);
         canAttack = true;
     }
 
-    // --- Система здоров'я та стадій ---
-
     /// <summary>
-    /// Applies damage to the boss.
+    /// Завдає шкоди босу.
     /// </summary>
-    /// <param name="damage">The amount of damage to apply.</param>
+    /// <param name="damage">Кількість шкоди.</param>
     public void TakeDamage(int damage)
     {
         if (currentState == BossState.Defeated) return;
@@ -183,7 +173,6 @@ public class KolobokController : MonoBehaviour
         currentHealth -= damage;
         Debug.Log($"Kolobok Health: {currentHealth}");
 
-        // Оновлюємо UI при отриманні шкоди
         uiManager?.UpdateBossHealthBar(currentHealth);
 
         if (currentHealth <= 0)
@@ -198,7 +187,6 @@ public class KolobokController : MonoBehaviour
 
     private void CheckStageTransition()
     {
-        // Перехід на другу стадію
         if (currentState == BossState.Stage1_Rolling && currentHealth <= maxHealth * stage2HealthThreshold)
         {
             TransitionToStage2();
@@ -208,7 +196,7 @@ public class KolobokController : MonoBehaviour
     private void TransitionToStage2()
     {
         currentState = BossState.Stage2_Jumping;
-        moveSpeed *= 1.2f; // Трохи збільшуємо швидкість
+        moveSpeed *= 1.2f;
         Debug.Log("KOLOBOK ENTERS STAGE 2! It starts jumping!");
     }
 
@@ -216,25 +204,21 @@ public class KolobokController : MonoBehaviour
     {
         currentState = BossState.Defeated;
         Debug.Log("Kolobok is defeated!");
-        // Ховаємо UI, коли бос переможений
         uiManager?.HideBossUI();
-        // Тут буде логіка перемоги
-        Destroy(gameObject, 2f); // Знищуємо об'єкт через 2 секунди
+        Destroy(gameObject, 2f);
     }
 
     /// <summary>
-    /// Called when a collision occurs.
+    /// Викликається при зіткненні.
     /// </summary>
-    /// <param name="collision">The collision data.</param>
+    /// <param name="collision">Дані про зіткнення.</param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Перевіряємо, чи це гравець
         if (collision.gameObject.CompareTag("Player"))
         {
             AnimalCharacter player = collision.gameObject.GetComponent<AnimalCharacter>();
             if (player != null)
             {
-                // Завдаємо шкоди гравцеві
                 Debug.Log("Kolobok damaged the player!");
                 player.TakeDamage(touchDamage);
             }

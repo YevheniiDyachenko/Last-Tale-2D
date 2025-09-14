@@ -4,25 +4,26 @@ using UnityEngine.InputSystem;
 
 
 /// <summary>
-/// Handles the player's ability to place traps and use a trap boost.
+/// Обробляє здатність гравця ставити пастки та використовувати їх посилення.
 /// </summary>
 [RequireComponent(typeof(AnimalCharacter))]
 public class PlayerTrapAbility : MonoBehaviour
 {
     [Header("Trap Placing")]
     [SerializeField] private GameObject trapPrefab;
-    [SerializeField] private int trapCost = 1; // Вартість пастки в ресурсах
+    [SerializeField] private int trapCost = 1;
 
     [Header("Resources")]
-    private int currentResources = 0; // Поточна кількість ресурсів
-    private UIManager uiManager; // Посилання на UI Manager
+    private int currentResources = 0;
+    private UIManager uiManager;
 
     [Header("Trap Boost Ability")]
     [SerializeField] private float trapBoostDuration = 10f;
     [SerializeField] private float trapBoostCooldown = 25f;
     [SerializeField] private float trapBoostEnergyCost = 30f;
+
     /// <summary>
-    /// Indicates whether the trap boost is currently active.
+    /// Показує, чи активне на даний момент посилення пасток.
     /// </summary>
     public static bool isTrapBoostActive = false;
 
@@ -32,7 +33,7 @@ public class PlayerTrapAbility : MonoBehaviour
 
 
     /// <summary>
-    /// Initializes the trap ability.
+    /// Ініціалізує здатність ставити пастки.
     /// </summary>
     private void Awake()
     {
@@ -43,22 +44,21 @@ public class PlayerTrapAbility : MonoBehaviour
     }
 
     /// <summary>
-    /// Initializes the UI for the trap ability.
+    /// Ініціалізує UI для здатності ставити пастки.
     /// </summary>
     private void Start()
     {
-        // Знаходимо UI Manager та ініціалізуємо текст ресурсів
         uiManager = FindFirstObjectByType<UIManager>();
         uiManager?.UpdateResourceText(currentResources);
     }
 
     /// <summary>
-    /// Enables the trap ability controls.
+    /// Вмикає керування здатністю ставити пастки.
     /// </summary>
     private void OnEnable() => controls.InGame.Enable();
 
     /// <summary>
-    /// Disables the trap ability controls.
+    /// Вимикає керування здатністю ставити пастки.
     /// </summary>
     private void OnDisable() => controls.InGame.Disable();
 
@@ -67,7 +67,7 @@ public class PlayerTrapAbility : MonoBehaviour
         if (trapPrefab != null && currentResources >= trapCost)
         {
             currentResources -= trapCost;
-            uiManager?.UpdateResourceText(currentResources); // Оновлюємо UI
+            uiManager?.UpdateResourceText(currentResources);
             Instantiate(trapPrefab, transform.position, Quaternion.identity);
             Debug.Log($"Trap placed! Resources left: {currentResources}");
         }
@@ -78,9 +78,9 @@ public class PlayerTrapAbility : MonoBehaviour
     }
 
     /// <summary>
-    /// Called when another collider enters the trigger.
+    /// Викликається, коли інший колайдер входить у тригер.
     /// </summary>
-    /// <param name="other">The other collider.</param>
+    /// <param name="other">Інший колайдер.</param>
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Resource"))
@@ -89,7 +89,7 @@ public class PlayerTrapAbility : MonoBehaviour
             if (resource != null)
             {
                 currentResources += resource.amount;
-                uiManager?.UpdateResourceText(currentResources); // Оновлюємо UI
+                uiManager?.UpdateResourceText(currentResources);
                 Debug.Log($"Collected {resource.amount} resource(s)! Total: {currentResources}");
                 Destroy(other.gameObject);
             }
@@ -97,7 +97,7 @@ public class PlayerTrapAbility : MonoBehaviour
     }
 
     /// <summary>
-    /// Attempts to activate the trap boost ability.
+    /// Спроба активувати посилення пасток.
     /// </summary>
     private void TryActivateTrapBoost()
     {

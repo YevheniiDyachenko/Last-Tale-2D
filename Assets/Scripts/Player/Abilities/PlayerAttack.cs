@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Handles the player's attack ability.
+/// Обробляє здатність гравця до атаки.
 /// </summary>
 public class PlayerAttack : MonoBehaviour
 {
@@ -17,7 +17,7 @@ public class PlayerAttack : MonoBehaviour
     private bool canAttack = true;
 
     /// <summary>
-    /// Initializes the player attack controls.
+    /// Ініціалізує керування атакою гравця.
     /// </summary>
     private void Awake()
     {
@@ -26,12 +26,12 @@ public class PlayerAttack : MonoBehaviour
     }
 
     /// <summary>
-    /// Enables the attack controls.
+    /// Вмикає керування атакою.
     /// </summary>
     private void OnEnable() => controls.InGame.Enable();
 
     /// <summary>
-    /// Disables the attack controls.
+    /// Вимикає керування атакою.
     /// </summary>
     private void OnDisable() => controls.InGame.Disable();
 
@@ -48,7 +48,6 @@ public class PlayerAttack : MonoBehaviour
         canAttack = false;
         Debug.Log("Player attacks!");
 
-        // Атака у напрямку transform.right (вперед)
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position + transform.right * (attackRange / 2), attackRange, bossLayer);
         foreach (Collider2D enemy in hitEnemies)
         {
@@ -65,7 +64,7 @@ public class PlayerAttack : MonoBehaviour
     }
 
     /// <summary>
-    /// Draws a gizmo to visualize the attack range.
+    /// Малює гизмо для візуалізації дальності атаки.
     /// </summary>
     private void OnDrawGizmosSelected()
     {

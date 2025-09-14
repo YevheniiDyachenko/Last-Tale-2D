@@ -2,45 +2,42 @@
 using UnityEngine;
 
 /// <summary>
-/// Represents a trap that can be placed in the game world.
+/// Представляє пастку, яку можна розмістити в ігровому світі.
 /// </summary>
-[RequireComponent(typeof(SpriteRenderer))] // Переконуємось, що на об'єкті є SpriteRenderer
+[RequireComponent(typeof(SpriteRenderer))]
 public class Trap : MonoBehaviour
 {
     [Header("Stats")]
     [SerializeField] private int baseDamage = 50;
     [SerializeField] private float boostMultiplier = 2f;
-    [SerializeField] private Color boostedColor = Color.blue; // Колір для підсиленої пастки
+    [SerializeField] private Color boostedColor = Color.blue;
 
     private SpriteRenderer spriteRenderer;
 
     /// <summary>
-    /// Initializes the trap.
+    /// Ініціалізує пастку.
     /// </summary>
     private void Awake()
     {
-        // Отримуємо компонент один раз, щоб не шукати його постійно
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     /// <summary>
-    /// Called when the trap is created.
+    /// Викликається при створенні пастки.
     /// </summary>
     private void Start()
     {
-        // НОВИЙ КОД: Перевіряємо, чи активне підсилення, при появі пастки
         if (PlayerTrapAbility.isTrapBoostActive)
         {
-            // Якщо так, змінюємо колір
             spriteRenderer.color = boostedColor;
             Debug.Log("A boosted (blue) trap has been placed!");
         }
     }
 
     /// <summary>
-    /// Called when another collider enters the trap's trigger.
+    /// Викликається, коли інший колайдер входить у тригер пастки.
     /// </summary>
-    /// <param name="other">The other collider.</param>
+    /// <param name="other">Інший колайдер.</param>
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Boss"))

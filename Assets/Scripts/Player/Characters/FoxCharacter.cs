@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Represents the Fox character, with a stealth ability.
+/// Представляє персонажа Лисицю зі здатністю невидимості.
 /// </summary>
 public class FoxCharacter : AnimalCharacter
 {
@@ -20,7 +20,7 @@ public class FoxCharacter : AnimalCharacter
     private Vector2 lookInput;
 
     /// <summary>
-    /// Initializes the Fox character.
+    /// Ініціалізує персонажа Лисицю.
     /// </summary>
     private void Awake()
     {
@@ -30,7 +30,7 @@ public class FoxCharacter : AnimalCharacter
     }
 
     /// <summary>
-    /// Enables the character's controls.
+    /// Вмикає керування персонажем.
     /// </summary>
     private void OnEnable()
     {
@@ -38,7 +38,7 @@ public class FoxCharacter : AnimalCharacter
     }
 
     /// <summary>
-    /// Disables the character's controls.
+    /// Вимикає керування персонажем.
     /// </summary>
     private void OnDisable()
     {
@@ -46,7 +46,7 @@ public class FoxCharacter : AnimalCharacter
     }
 
     /// <summary>
-    /// Initializes the base character stats.
+    /// Ініціалізує базові характеристики персонажа.
     /// </summary>
     protected override void Start()
     {
@@ -54,7 +54,7 @@ public class FoxCharacter : AnimalCharacter
     }
 
     /// <summary>
-    /// Called every frame. Handles player input and rotation.
+    /// Викликається щокадру. Обробляє ввід гравця та обертання.
     /// </summary>
     private void Update()
     {
@@ -64,7 +64,7 @@ public class FoxCharacter : AnimalCharacter
     }
 
     /// <summary>
-    /// Called every fixed frame-rate frame. Handles character movement.
+    /// Викликається кожен фіксований кадр. Обробляє рух персонажа.
     /// </summary>
     private void FixedUpdate()
     {
@@ -86,8 +86,6 @@ public class FoxCharacter : AnimalCharacter
             StartCoroutine(ActivateStealth());
         }
     }
-
-
 
     private IEnumerator ActivateStealth()
     {

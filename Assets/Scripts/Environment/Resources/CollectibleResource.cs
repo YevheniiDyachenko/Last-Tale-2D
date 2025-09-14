@@ -1,12 +1,12 @@
 using UnityEngine;
 
 /// <summary>
-/// Represents a collectible resource in the game.
+/// Представляє собою ресурс, який можна підібрати в грі.
 /// </summary>
 public class CollectibleResource : MonoBehaviour
 {
     /// <summary>
-    /// The amount of resource this collectible provides.
+    /// Кількість ресурсу, яку надає цей об'єкт.
     /// </summary>
-    public int amount = 1; // Кількість ресурсів, яку дає цей об'єкт
+    public int amount = 1;
 }
