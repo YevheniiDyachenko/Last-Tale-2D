@@ -10,8 +10,17 @@ public class FoxCharacter : AnimalCharacter
     private PlayerControls controls;
 
     [Header("Fox Abilities")]
+    /// <summary>
+    /// Тривалість невидимості.
+    /// </summary>
     [SerializeField] private float stealthDuration = 5f;
+    /// <summary>
+    /// Перезарядка невидимості.
+    /// </summary>
     [SerializeField] private float stealthCooldown = 20f;
+    /// <summary>
+    /// Вартість невидимості в енергії.
+    /// </summary>
     [SerializeField] private float stealthEnergyCost = 40f;
 
     private bool isStealthOnCooldown = false;

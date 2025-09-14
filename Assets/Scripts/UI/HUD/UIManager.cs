@@ -10,21 +10,57 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
     [Header("Player Stats")]
+    /// <summary>
+    /// Слайдер здоров'я гравця.
+    /// </summary>
     [SerializeField] private Slider healthBar;
+    /// <summary>
+    /// Слайдер енергії гравця.
+    /// </summary>
     [SerializeField] private Slider energyBar;
+    /// <summary>
+    /// Текст для відображення кількості ресурсів.
+    /// </summary>
     [SerializeField] private TextMeshProUGUI resourceText;
 
     [Header("Boss UI")]
+    /// <summary>
+    /// Панель UI боса.
+    /// </summary>
     [SerializeField] private GameObject bossUIPanel;
+    /// <summary>
+    /// Слайдер здоров'я боса.
+    /// </summary>
     [SerializeField] private Slider bossHealthBar;
+    /// <summary>
+    /// Текст для анонсів.
+    /// </summary>
     [SerializeField] private TextMeshProUGUI announcementText;
 
     [Header("Game Over UI")]
+    /// <summary>
+    /// Панель екрана смерті.
+    /// </summary>
     [SerializeField] private GameObject deathScreenPanel;
+    /// <summary>
+    /// CanvasGroup для анімації прозорості екрана смерті.
+    /// </summary>
     [SerializeField] private CanvasGroup deathScreenCanvasGroup;
+    /// <summary>
+    /// Заголовок на екрані смерті.
+    /// </summary>
     [SerializeField] private TextMeshProUGUI deathScreenTitle;
+    /// <summary>
+    /// Кнопка "Спробувати знову".
+    /// </summary>
     [SerializeField] private Button retryButton;
+    /// <summary>
+    /// Кнопка "Вийти в меню".
+    /// </summary>
     [SerializeField] private Button menuButton;
+    /// <summary>
+    /// Швидкість анімації появи/зникнення екрана смерті.
+    /// </summary>
     [SerializeField] private float fadeSpeed = 2f;
 
     /// <summary>

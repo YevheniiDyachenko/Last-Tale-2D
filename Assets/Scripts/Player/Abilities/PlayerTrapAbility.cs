@@ -10,7 +10,13 @@ using UnityEngine.InputSystem;
 public class PlayerTrapAbility : MonoBehaviour
 {
     [Header("Trap Placing")]
+    /// <summary>
+    /// Префаб пастки.
+    /// </summary>
     [SerializeField] private GameObject trapPrefab;
+    /// <summary>
+    /// Вартість пастки в ресурсах.
+    /// </summary>
     [SerializeField] private int trapCost = 1;
 
     [Header("Resources")]
@@ -18,8 +24,17 @@ public class PlayerTrapAbility : MonoBehaviour
     private UIManager uiManager;
 
     [Header("Trap Boost Ability")]
+    /// <summary>
+    /// Тривалість посилення пастки.
+    /// </summary>
     [SerializeField] private float trapBoostDuration = 10f;
+    /// <summary>
+    /// Перезарядка посилення пастки.
+    /// </summary>
     [SerializeField] private float trapBoostCooldown = 25f;
+    /// <summary>
+    /// Вартість посилення пастки в енергії.
+    /// </summary>
     [SerializeField] private float trapBoostEnergyCost = 30f;
 
     /// <summary>

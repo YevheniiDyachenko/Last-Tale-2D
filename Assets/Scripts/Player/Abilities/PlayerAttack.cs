@@ -8,9 +8,21 @@ using UnityEngine.InputSystem;
 public class PlayerAttack : MonoBehaviour
 {
     [Header("Attack Settings")]
+    /// <summary>
+    /// Шкода від атаки.
+    /// </summary>
     [SerializeField] private int attackDamage = 15;
+    /// <summary>
+    /// Дальність атаки.
+    /// </summary>
     [SerializeField] private float attackRange = 1.5f;
+    /// <summary>
+    /// Перезарядка атаки.
+    /// </summary>
     [SerializeField] private float attackCooldown = 0.8f;
+    /// <summary>
+    /// Шар, на якому знаходиться бос.
+    /// </summary>
     [SerializeField] private LayerMask bossLayer;
 
     private PlayerControls controls;

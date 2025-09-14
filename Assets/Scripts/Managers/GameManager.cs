@@ -14,11 +14,23 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [Header("Game Settings")]
+    /// <summary>
+    /// Час підготовки перед появою боса.
+    /// </summary>
     [SerializeField] private float preparationTime = 90f;
+    /// <summary>
+    /// Затримка перед перезапуском рівня.
+    /// </summary>
     [SerializeField] private float restartDelay = 4f;
 
     [Header("Boss Settings")]
+    /// <summary>
+    /// Префаб боса Колобка.
+    /// </summary>
     [SerializeField] private GameObject kolobokPrefab;
+    /// <summary>
+    /// Точка появи боса.
+    /// </summary>
     [SerializeField] private Transform spawnPoint;
 
     /// <summary>

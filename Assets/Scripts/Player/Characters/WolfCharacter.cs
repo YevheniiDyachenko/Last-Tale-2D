@@ -12,10 +12,25 @@ public class WolfCharacter : AnimalCharacter
     private System.Action<UnityEngine.InputSystem.InputAction.CallbackContext> chargePerformed;
 
     [Header("Wolf Abilities")]
+    /// <summary>
+    /// Швидкість ривка.
+    /// </summary>
     [SerializeField] private float chargeSpeed = 25f;
+    /// <summary>
+    /// Тривалість ривка.
+    /// </summary>
     [SerializeField] private float chargeDuration = 0.3f;
+    /// <summary>
+    /// Шкода від ривка.
+    /// </summary>
     [SerializeField] private int chargeDamage = 40;
+    /// <summary>
+    /// Перезарядка ривка.
+    /// </summary>
     [SerializeField] private float chargeCooldown = 8f;
+    /// <summary>
+    /// Вартість ривка в енергії.
+    /// </summary>
     [SerializeField] private float chargeEnergyCost = 35f;
 
     private bool isCharging = false;

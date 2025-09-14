@@ -8,8 +8,17 @@ using UnityEngine;
 public class Trap : MonoBehaviour
 {
     [Header("Stats")]
+    /// <summary>
+    /// Базова шкода пастки.
+    /// </summary>
     [SerializeField] private int baseDamage = 50;
+    /// <summary>
+    /// Множник шкоди для посиленої пастки.
+    /// </summary>
     [SerializeField] private float boostMultiplier = 2f;
+    /// <summary>
+    /// Колір посиленої пастки.
+    /// </summary>
     [SerializeField] private Color boostedColor = Color.blue;
 
     private SpriteRenderer spriteRenderer;

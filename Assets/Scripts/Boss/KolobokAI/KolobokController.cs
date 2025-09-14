@@ -25,28 +25,43 @@ public class KolobokController : MonoBehaviour
     /// Поточний стан боса.
     /// </summary>
     public BossState currentState;
-    private BossState previousState; // Зберігаємо попередній стан, щоб повернутись до нього
+    private BossState previousState;
 
     [Header("Base Stats")]
+    /// <summary>
+    /// Максимальне здоров'я боса.
+    /// </summary>
     [SerializeField] private int maxHealth = 1000;
+    /// <summary>
+    /// Швидкість руху боса.
+    /// </summary>
     [SerializeField] private float moveSpeed = 3f;
 
     [Header("Stage Settings")]
-    [SerializeField] private float stage2HealthThreshold = 0.7f; // Перехід на 2 стадію при 70% здоров'я
-    [SerializeField] private float jumpAttackCooldown = 5f; // Перезарядка стрибка
-    [SerializeField] private float trapStunDuration = 2f; // НОВИЙ ПАРАМЕТР: тривалість застрягання
+    /// <summary>
+    /// Поріг здоров'я для переходу на другу стадію (у відсотках).
+    /// </summary>
+    [SerializeField] private float stage2HealthThreshold = 0.7f;
+    /// <summary>
+    /// Перезарядка атаки стрибком.
+    /// </summary>
+    [SerializeField] private float jumpAttackCooldown = 5f;
+    /// <summary>
+    /// Тривалість оглушення від пастки.
+    /// </summary>
+    [SerializeField] private float trapStunDuration = 2f;
 
     private int currentHealth;
     private Transform target;
     private Rigidbody2D rb;
     private bool canAttack = true;
-    private UIManager uiManager; // Посилання на UI Manager
+    private UIManager uiManager;
 
     [Header("Attack Stats")]
     /// <summary>
     /// Шкода, яку бос завдає при дотику.
     /// </summary>
-    [SerializeField] private int touchDamage = 20; // Шкода від простого дотику
+    [SerializeField] private int touchDamage = 20;
 
     /// <summary>
     /// Ініціалізує боса Колобка.
@@ -55,7 +70,7 @@ public class KolobokController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         currentHealth = maxHealth;
-        currentState = BossState.Stage1_Rolling; // Починаємо з першої стадії
+        currentState = BossState.Stage1_Rolling;
 
         GameObject player = GameObject.FindWithTag("Player");
         if (player != null)
@@ -63,7 +78,6 @@ public class KolobokController : MonoBehaviour
             target = player.transform;
         }
 
-        // Знаходимо UI Manager та сповіщаємо про появу
         uiManager = FindFirstObjectByType<UIManager>();
         if (uiManager != null)
         {
